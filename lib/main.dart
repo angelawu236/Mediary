@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
-void main() {
+
+void main() async {
   runApp(const MyApp());
 }
 
