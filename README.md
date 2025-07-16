@@ -1,6 +1,16 @@
 # mediary
 
-A new Flutter project.
+Mediary is a flutter mobile app that helps users track and review their watched-media - including movies and shows.
+
+--
+## Features
+- User Authentication
+- Browse Media via external API
+- User Ratings and Comments
+- Profile Screen
+- State management with Provider
+- Structure inspired by UCSD's Campus Mobile App
+
 
 ## Getting Started
 
