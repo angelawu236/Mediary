@@ -14,6 +14,7 @@ import 'package:mediary/ui/profile_screen.dart';
 import 'package:mediary/ui/widgets/media_category_card.dart';
 import 'app_constants.dart';
 import 'package:mediary/ui/bottom.dart';
+import 'package:mediary/ui/onboarding/registration_screen.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings){
@@ -24,6 +25,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.LoginScreen:
         return MaterialPageRoute(builder: (_) => LoginScreen());
+      case RoutePaths.RegisterScreen:
+        return MaterialPageRoute(builder: (_) => RegistrationScreen());
       default:
         return MaterialPageRoute(builder: (_) => Home());
     }
