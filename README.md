@@ -4,12 +4,11 @@ Mediary is a flutter mobile app that helps users track and review their watched-
 
 --
 ## Features
-- User Authentication (login, logout, register) with Firebase
+- User Authentication (login, logout, register) with Firebase Authentication
 - Browse Media via external API
 - User Ratings and Comments
 - Profile Screen
-- State management with Provider
-- Structure inspired by UCSD's Campus Mobile App
+- State management with Provider, local storage with Hive, persistent storage in Firebase Firestore
 
 
 ## Getting Started
