@@ -28,3 +28,9 @@ const textFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10.0)),
   ),
 );
+
+//used for hive
+class DataPersistence {
+  static const cardOrder = 'cardOrder';
+  static const cardStates = 'cardStates';
+}
