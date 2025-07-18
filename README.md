@@ -1,6 +1,6 @@
 # mediary
 
-Mediary is a flutter mobile app that helps users track and review their watched-media - including movies and shows.
+Mediary is a flutter mobile app that helps users track and review their watched media, such as movies and shows. 
 
 --
 ## Features
