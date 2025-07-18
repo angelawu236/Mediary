@@ -13,7 +13,7 @@ class CardsService {
   //reads the json using function from models.
   Future <bool> fetchCards() async{
     try{
-      cardsModel = cardsModelFromJson('assets/cards.json');
+      cardsModel = cardsModelFromJson('data/cards.json');
       return true;
     } catch (e){
       print(e);
