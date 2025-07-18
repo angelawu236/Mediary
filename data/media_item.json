@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Attack on Titan",
+    "category": "anime",
+    "watched": false,
+    "comment": ""
+  },
+  {
+    "title": "Inception",
+    "category": "movies",
+    "watched": true,
+    "comment": "Very cool..!"
+  }
+]

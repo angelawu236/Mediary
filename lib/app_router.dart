@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mediary/ui/onboarding/login_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:mediary/models/media_model.dart';
+import 'package:mediary/models/card_model.dart';
 import 'package:mediary/models/user_model.dart';
 import 'package:mediary/providers/auth_provider.dart';
 import 'package:mediary/providers/media_provider.dart';

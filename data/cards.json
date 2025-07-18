@@ -1,0 +1,21 @@
+{
+  "shows": [{
+    "cardActive" : true,
+    "titleText" : "Shows"
+  }],
+
+  "movies": [{
+    "cardActive" : true,
+    "titleText" : "Movies"
+  }],
+
+  "anime": [{
+    "cardActive" : true,
+    "titleText" : "Anime"
+  }],
+
+  "dramas": [{
+    "cardActive" : true,
+    "titleText" : "Dramas"
+  }]
+}
