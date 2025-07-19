@@ -11,7 +11,7 @@ import 'package:mediary/ui/all_media_screen.dart';
 import 'package:mediary/ui/items_media_screen.dart';
 import 'package:mediary/ui/profile_screen.dart';
 import 'package:mediary/ui/profile_screen.dart';
-import 'package:mediary/ui/widgets/media_category_card.dart';
+import 'package:mediary/ui/widgets/media_card.dart';
 import 'app_constants.dart';
 import 'package:mediary/ui/bottom.dart';
 import 'package:mediary/ui/onboarding/registration_screen.dart';

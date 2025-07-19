@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:mediary/app_styles.dart' as myColors;
 import 'package:mediary/app_constants.dart' as constants;
 import 'scaffold_wrapper.dart';
+import 'package:mediary/providers/cards_provider.dart';
+import 'package:mediary/services/card_services.dart';
+import 'package:mediary/models/card_model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,9 +29,31 @@ class _HomeState extends State<Home> {
                 fontSize: 45,
               )
             ),
+
           ]
         ),
       )
     );
+  }
+
+  static const categoryCardsList = {
+    'movies',
+    'shows',
+    'anime',
+    'drama',
+  };
+
+  Map<String, CardsModel> cards = {};
+  final cardService = CardsService();
+
+  cards =
+
+  Future <bool> =  CardsService.fetchCards();
+
+  List<Widget> getCardsList() async{
+    final cardsList = <Widget>[];
+    for(String cardName in categoryCardsList){
+
+    }
   }
 }

@@ -1,7 +1,5 @@
 //this file a card model and includes functions such as model->Json and Json->model
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'dart:convert';
 
 //#1 converts from JSON to Map<String, CardsModel>

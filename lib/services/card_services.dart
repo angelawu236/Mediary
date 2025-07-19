@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 var db = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
+final uid = _auth.currentUser?.uid;
+
 
 class CardsService {
   final Map<String, String> headers = {
@@ -17,7 +19,7 @@ class CardsService {
 
   late Map<String, CardsModel> cardsModel;
 
-  //reads the json using function from models.
+  //reads the json using function from models, used with storeCards.
   Future <bool> fetchCards() async{
     try{
       cardsModel = cardsModelFromJson('data/cards.json');
@@ -28,8 +30,28 @@ class CardsService {
     }
   }
 
-  void storeCards() async {
-       await db.collection(_auth.currentUser as String).add(cardsModel);
+  //reads from firestore
+  Future<Map<String, CardsModel>> fetchCardsFromFirestore(String uid) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('cards')
+        .get();
+
+    return {
+      for (var doc in snapshot.docs)
+        doc.id: CardsModel.fromJson(doc.data())
+    };
+  }
+
+  //store cards in firestore
+  void storeCards(String cardId, CardsModel card) async {
+    await db
+        .collection('users')
+        .doc(uid)
+        .collection('cards')
+        .doc(cardId)
+        .set(card.toJson());
   }
 
 

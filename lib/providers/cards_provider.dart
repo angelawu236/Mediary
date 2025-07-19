@@ -9,7 +9,6 @@ class CardsProvider extends ChangeNotifier {
   //box for hive
   late Box cardOrderBox;
   late Box cardStateBox;
-  Map<String, bool> cardStates = {};
 
   //providers
   Map<String, CardsModel> cards = {};
@@ -20,14 +19,16 @@ class CardsProvider extends ChangeNotifier {
   List<String> cardOrder = [];
 
   void updateCards() async {
-    if (await cardService.fetchCards()) {
-      cards.forEach((card, model) {
-        if (model.cardActive!) {
-          cardOrder.add(card);
-          cardStates.putIfAbsent(card, () => true);
-        }
-      });
-    }
+  }
+
+
+
+  //if user does this in card settings
+  void toggleCard(String card) async {
+    //updates state of Card
+    cards[card]?.cardActive = !(cards[card]?.cardActive ?? true);
+    cardService.storeCards(card, cards[card]!);
+    notifyListeners();
   }
 
   //update hive storage for card order
@@ -52,43 +53,31 @@ class CardsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //load card states
-  Future loadCardState() async {
-    cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+  // //load card states
+  // Future loadCardState() async {
+  //   cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+  //
+  //   if (cardStateBox.get(DataPersistence.cardStates) == null) {
+  //     await cardStateBox.put(DataPersistence.cardStates,
+  //         cardStates.keys.where((card) => cardStates[card]!).toList());
+  //   } else {
+  //     deactivateAllCards();
+  //   }
+  //   notifyListeners();
+  // }
 
-    if (cardStateBox.get(DataPersistence.cardStates) == null) {
-      await cardStateBox.put(DataPersistence.cardStates,
-          cardStates.keys.where((card) => cardStates[card]!).toList());
-    } else {
-      deactivateAllCards();
-    }
-    notifyListeners();
-  }
+  // Future updateCardState() async {
+  //   var activeCards =
+  //       cardStates.keys.where((card) => cardStates[card]!).toList();
+  //   // cardStateBox = await Hive.openBox(DataPersistence.cardStates);
+  //   // cardStateBox.put(DataPersistence.cardStates, activeCards);
+  //   notifyListeners();
+  // }
+  //
+  // void deactivateAllCards() {
+  //   for (String card in cardStates.keys) {
+  //     cardStates[card] = false;
+  //   }
+  // }
 
-  Future updateCardState() async {
-    var activeCards =
-        cardStates.keys.where((card) => cardStates[card]!).toList();
-
-    cardStateBox = await Hive.openBox(DataPersistence.cardStates);
-
-    cardStateBox.put(DataPersistence.cardStates, activeCards);
-
-    notifyListeners();
-  }
-
-  void deactivateAllCards() {
-    for (String card in cardStates.keys) {
-      cardStates[card] = false;
-    }
-  }
-
-  void toggleCard(String card) {
-    try {
-      cardStates[card] = !cardStates[card]!;
-      updateCardState();
-    } catch (e) {
-      print('error logging card state');
-      cardStates[card] = !cardStates[card]!;
-    }
-  }
 }
