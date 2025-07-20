@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mediary/models/card_model.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 
 var db = FirebaseFirestore.instance;
@@ -22,7 +23,8 @@ class CardsService {
   //reads the json using function from models, used with storeCards.
   Future <bool> fetchCards() async{
     try{
-      cardsModel = cardsModelFromJson('data/cards.json');
+      String jsonString = await rootBundle.loadString('data/cards.json');
+      cardsModel = cardsModelFromJson(jsonString);
       return true;
     } catch (e){
       print(e);
@@ -31,27 +33,48 @@ class CardsService {
   }
 
   //reads from firestore
-  Future<Map<String, CardsModel>> fetchCardsFromFirestore(String uid) async {
+  Future<bool> fetchCardsFromFirestore(String uid) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection('cards')
         .get();
-
-    return {
-      for (var doc in snapshot.docs)
+    try{
+      cardsModel = {for (var doc in snapshot.docs)
         doc.id: CardsModel.fromJson(doc.data())
-    };
+      };
+      return true;
+    } catch(e){
+      print('error fetching cards from firestore in card_services');
+      return false;
+    }
+
   }
 
   //store cards in firestore
-  void storeCards(String cardId, CardsModel card) async {
-    await db
-        .collection('users')
-        .doc(uid)
-        .collection('cards')
-        .doc(cardId)
-        .set(card.toJson());
+  Future<bool> storeCards(Map<String, CardsModel> cardMap) async {
+    try{
+
+      await db.collection('users').doc(uid).set({}, SetOptions(merge: true));
+
+
+      for(final entry in cardMap.entries){
+        final cardId = entry.key;
+        final card = entry.value;
+
+        await db
+            .collection('users')
+            .doc(uid)
+            .collection('cards')
+            .doc(cardId)
+            .set(card.toJson());
+        print('Writing card $cardId: ${card.toJson()}');
+      }
+      return true;
+    } catch(e) {
+      print ('error storing cards ');
+      return false;
+    }
   }
 
 

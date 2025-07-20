@@ -7,6 +7,7 @@ import 'package:mediary/ui/bottom.dart';
 import 'package:mediary/ui/onboarding/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mediary/providers/cards_provider.dart';
 
 var showOnboardingScreen = true;
 
@@ -15,24 +16,28 @@ void main() async {
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    final theme = ThemeData(
-
-    );
-    return MaterialApp(
-
-      theme: ThemeData(useMaterial3: true),
-      title: 'Mediary',
-      initialRoute: showOnboardingScreen
-      ? RoutePaths.LoginScreen
-      : RoutePaths.NavBar,
-      onGenerateRoute: mediaryRouter.Router.generateRoute,
+    final theme = ThemeData();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<CardsProvider>(
+          create: (_) {
+            return CardsProvider();
+          },
+        ),
+      ],
+      child: MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        title: 'Mediary',
+        initialRoute:
+            showOnboardingScreen ? RoutePaths.LoginScreen : RoutePaths.NavBar,
+        onGenerateRoute: mediaryRouter.Router.generateRoute,
+      ),
     );
   }
 }
-

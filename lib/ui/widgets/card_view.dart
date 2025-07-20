@@ -10,51 +10,43 @@ class CardContainer extends StatelessWidget {
     super.key,
     required this.titleText,
     required this.active,
-    required this.hide,
   });
 
   final String titleText;
   final bool active;
-  final Function hide;
 
   @override
   Widget build(BuildContext context) {
     if (active) {
-      return Card(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ListTile(
-                  contentPadding: const EdgeInsets.only(
-                      top: 0.0, right: 8.0, bottom: 0.0, left: 8.0),
-                  visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
-                  title: Text(titleText),
-                ),
-                buildCardContent(context),
-
-              ]
-          )
+      return TextButton(
+        onPressed: (){},
+        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+        child: Card(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(9.0),
+            ),
+            child: Container(
+                height: 90,
+                  alignment: Alignment.centerLeft,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.only(
+                        top: 10.0, right: 8.0, bottom: 10.0, left: 9.0),
+                    title: Text(titleText,
+                    style: TextStyle(fontSize: 20)),
+                  ),
+                  // buildCardContent(context),
+            )
+        ),
       );
     }
     return const Text('not active!'); //not active
-
   }
 
   Widget buildCardContent(context){
     return const SizedBox(
+      height: 100,
       width: double.infinity,
-        child: Center(
-        child: SizedBox(
-        height: 32,
-        width: 32,
-        child: CircularProgressIndicator(
-          color: myColors.lightGreenColor,
-        )),
-    ),
     );
   }
 }
