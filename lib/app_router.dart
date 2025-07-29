@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mediary/ui/onboarding/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:mediary/models/card_model.dart';
-import 'package:mediary/models/user_model.dart';
 import 'package:mediary/providers/auth_provider.dart';
 import 'package:mediary/providers/media_provider.dart';
-import 'package:mediary/services/local_storage_service.dart';
 import 'package:mediary/services/media_api_service.dart';
 import 'package:mediary/ui/all_media_screen.dart';
 import 'package:mediary/ui/items_media_screen.dart';
@@ -27,6 +25,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case RoutePaths.RegisterScreen:
         return MaterialPageRoute(builder: (_) => RegistrationScreen());
+      case RoutePaths.MediaItems:
+        return MaterialPageRoute(builder: (_) => AddMediaScreen());
       default:
         return MaterialPageRoute(builder: (_) => Home());
     }

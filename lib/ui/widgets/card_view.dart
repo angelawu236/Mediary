@@ -18,26 +18,22 @@ class CardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (active) {
-      return TextButton(
-        onPressed: (){},
-        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-        child: Card(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(9.0),
-            ),
-            child: Container(
-                height: 90,
-                  alignment: Alignment.centerLeft,
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.only(
-                        top: 10.0, right: 8.0, bottom: 10.0, left: 9.0),
-                    title: Text(titleText,
-                    style: TextStyle(fontSize: 20)),
-                  ),
-                  // buildCardContent(context),
-            )
-        ),
+      return Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(9.0),
+          ),
+          child: Container(
+              height: 90,
+                alignment: Alignment.centerLeft,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.only(
+                      top: 10.0, right: 8.0, bottom: 10.0, left: 9.0),
+                  title: Text(titleText,
+                  style: TextStyle(fontSize: 20)),
+                ),
+                // buildCardContent(context),
+          )
       );
     }
     return const Text('not active!'); //not active

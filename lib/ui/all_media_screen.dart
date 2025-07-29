@@ -9,6 +9,7 @@ import 'package:mediary/providers/cards_provider.dart';
 import 'package:mediary/services/card_services.dart';
 import 'package:mediary/models/card_model.dart';
 import 'package:mediary/ui/widgets/card_view.dart';
+import 'package:mediary/app_router.dart' as RoutePaths;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -59,12 +60,18 @@ class _HomeState extends State<Home> {
             ...cardsProvider.cards.entries.map((entry) {
               final card = entry.value;
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-                child: CardContainer(
-                  titleText: card.titleText ?? 'Untitled',
-                  active: card.cardActive ?? false,
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, constants.RoutePaths.MediaItems);
+                  },
+                  child: CardContainer(
+                    titleText: card.titleText ?? 'Untitled',
+                    active: card.cardActive ?? false,
+                  ),
                 ),
               );
+
             }),
           ]
         ),

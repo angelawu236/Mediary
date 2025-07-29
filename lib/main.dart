@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mediary/providers/media_provider.dart';
+import 'package:mediary/providers/watchlist_provider.dart';
 import 'package:provider/provider.dart';
 import 'app_styles.dart';
 import 'app_router.dart' as mediaryRouter;
@@ -30,6 +32,16 @@ class MyApp extends StatelessWidget {
             return CardsProvider();
           },
         ),
+        ChangeNotifierProvider<MediaProvider>(
+          create: (_) {
+            return MediaProvider();
+          }
+        ),
+        ChangeNotifierProvider<WatchlistProvider>(
+          create: (_) {
+            return WatchlistProvider();
+          }
+        )
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),

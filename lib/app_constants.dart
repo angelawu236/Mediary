@@ -7,6 +7,7 @@ class RoutePaths{
   static const String NavBar = 'navigation_bar';
   static const String LoginScreen = 'login_screen';
   static const String RegisterScreen = 'register_screen';
+  static const String MediaItems = "media_items";
 }
 
 class Titles {
@@ -28,9 +29,3 @@ const textFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10.0)),
   ),
 );
-
-//used for hive
-class DataPersistence {
-  static const cardOrder = 'cardOrder';
-  static const cardStates = 'cardStates';
-}
