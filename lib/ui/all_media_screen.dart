@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, constants.RoutePaths.MediaItems);
+                    Navigator.pushNamed(context, constants.RoutePaths.MediaList, arguments: card.titleText );
                   },
                   child: CardContainer(
                     titleText: card.titleText ?? 'Untitled',
@@ -71,7 +71,6 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               );
-
             }),
           ]
         ),

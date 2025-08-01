@@ -8,6 +8,7 @@ class RoutePaths{
   static const String LoginScreen = 'login_screen';
   static const String RegisterScreen = 'register_screen';
   static const String MediaItems = "media_items";
+  static const String MediaList = "media_list";
 }
 
 class Titles {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mediary/providers/media_provider.dart';
 import 'package:mediary/providers/watchlist_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:mediary/services/media_services.dart';
 import 'app_styles.dart';
 import 'app_router.dart' as mediaryRouter;
 import 'app_constants.dart';
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
           create: (_) {
             return WatchlistProvider();
           }
-        )
+        ),
+        Provider(create: (_) => MediaService()),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),

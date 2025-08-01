@@ -13,12 +13,14 @@ class MediaService {
 
 
   // Read media items from Firestore
-  Future<bool> fetchMediaFromFirestore(String uid) async {
+  Future<bool> fetchMediaFromFirestore(String uid, String category) async {
     try {
       final snapshot = await _db
           .collection('users')
           .doc(uid)
           .collection('media')
+          .where('category', isEqualTo: category)
+          .orderBy('index')
           .get();
 
       mediaMap = {
@@ -33,7 +35,7 @@ class MediaService {
     }
   }
 
-  // Store media items in Firestore
+  // Store media items in Firestore, here "String" would have to be the media's category.
   Future<bool> storeMedia(Map<String, MediaModel> mediaToStore) async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) {

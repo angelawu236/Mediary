@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/media_model.dart';
 
-class MediaService {
-  final String _apiKey = '5ffda2f52235ec6ba42433b16cc2518c';
+class MediaAPIService {
+  final String base_url = "https://nslfyxaei0.execute-api.us-east-2.amazonaws.com/default/getMovieData";
 
   Future<List<MediaModel>> searchMovies(String query) async {
-    final url = Uri.parse(
-      'https://api.themoviedb.org/3/search/movie?api_key=$_apiKey&query=$query',
-    );
-    final response = await http.get(url);
+    final uri = Uri.parse('$base_url?media=$query');
+    final response = await http.get(uri);
 
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);

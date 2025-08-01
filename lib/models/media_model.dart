@@ -18,29 +18,44 @@ class MediaModel {
     required this.titleText,
     required this.comments, //user input
     required this.rating, //user input
+    required this.isSelected,
+    required this.dateWatched,
+    required this.index,
+    required this.category,
   });
 
-  String? id;
+  int? id;
   String? date;
   String? titleText;
   String? comments;
   int? rating;
+  bool? isSelected;
+  String? dateWatched;
+  int? index;
+  String? category;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) {
     return MediaModel(
-      titleText: json['title'] ?? 'title not found',
-      date: json['data'] ?? 'date not found',
+      titleText: json['original_title'] ?? 'title not found',
+      date: json['release_date'] ?? 'date not found',
       id: json['id'] ?? 'no ID',
       comments: "",
-      rating: 0
+      rating: 0,
+      isSelected: false,
+      dateWatched: "",
+      category: json['category'] ?? '',
+      index: json['index'] ?? 0,
     );
   }
   Map<String, dynamic> toJson() => {
     "id": id,
-    "date": date,
-    "titleText": titleText,
+    "release_date": date,
+    "title": titleText,
     "comments": comments,
     "rating": rating,
+    "dateWatched": dateWatched,
+    "index": index,
+    "category": category,
   };
 
 }
