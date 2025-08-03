@@ -11,11 +11,12 @@ import 'package:mediary/app_constants.dart' as constants;
 import 'package:mediary/app_router.dart' as RoutePaths;
 
 import '../services/media_api_service.dart';
-import '../services/media_services.dart';
+import '../services/watchlist_services.dart';
 
 class MediaDetailFormScreen extends StatelessWidget {
   final String title;
   final String date;
+  final String posterPath;
   final String category;
   final int id;
 
@@ -24,6 +25,7 @@ class MediaDetailFormScreen extends StatelessWidget {
     required this.date,
     required this.category,
     required this.id,
+    required this.posterPath,
     super.key,
   });
 
@@ -36,11 +38,32 @@ class MediaDetailFormScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('$category Details')),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.only(left: 15, right: 15),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (posterPath.isNotEmpty)
+                Center(
+                  child: ClipRRect(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 150,
+                        maxHeight: 300,
+                      ),
+                      child: Image.network(
+                        'https://image.tmdb.org/t/p/w342$posterPath',
+                        fit: BoxFit.contain, // keeps aspect ratio
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.broken_image, size: 100, color: Colors.grey);
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Icon(Icons.image_not_supported, size: 100, color: Colors.grey),
+              SizedBox(height: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -49,7 +72,7 @@ class MediaDetailFormScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    'Date: $date',
+                    'Release Date: $date',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 12),
@@ -69,7 +92,7 @@ class MediaDetailFormScreen extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Rating'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
-                  rating = value as int?;
+                  rating = int.tryParse(value) ?? 0;
                 },
               ),
               TextField(
@@ -80,27 +103,27 @@ class MediaDetailFormScreen extends StatelessWidget {
               ),
               SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () async {
-                  final watchlistProvider = context.read<WatchlistProvider>();
-                  final mediaService = context.read<MediaService>();
+                  onPressed: () async {
+                    final watchlistProvider = context.read<WatchlistProvider>();
 
-                  final media = MediaModel(
-                    titleText: title,
-                    date: date,
-                    id: id,
-                    isSelected: false,
-                    comments: comments,
-                    rating: rating,
-                    dateWatched: watched_date,
-                    category: category,
-                    index: watchlistProvider.count,
-                  );
+                    final media = MediaModel(
+                      titleText: title,
+                      date: date,
+                      id: id,
+                      isSelected: false,
+                      comments: comments,
+                      rating: rating,
+                      dateWatched: watched_date,
+                      category: category,
+                      index: watchlistProvider.count,
+                      posterPath: posterPath,
+                    );
 
-                  await mediaService.storeMedia({media.id!.toString(): media});
-                  watchlistProvider.addMedia(media);
+                    watchlistProvider.addMedia(media);
+                    await watchlistProvider.storeAllMedia(category);
 
-                  Navigator.pushNamed(context, constants.RoutePaths.MediaItems, arguments: category);
-                },
+                    Navigator.pushNamed(context, constants.RoutePaths.MediaList, arguments: category);
+                  },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: myColors.mediumGreenColor,
                   padding: EdgeInsets.symmetric(vertical: 16),

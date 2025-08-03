@@ -21,8 +21,23 @@ class AddMediaScreen extends StatefulWidget {
 }
 
 class _AddMediaScreenState extends State<AddMediaScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mediaProvider = context.read<MediaProvider>();
+      mediaProvider.clearSearch();
+      setState(() {
+        _hasSearched = false;
+        query = null;
+        userSpecific = null;
+      });
+    });
+  }
   String? query;
   String? userSpecific;
+  bool _hasSearched = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +49,10 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
       body: AppScaffoldWrapper(
         child: Column(
           children: [
-            TextButton(
-              onPressed: () {
-              },
-              child: Text('get media data from firebase')
+            TextButton.icon(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Cancel'),
             ),
             Row(
               children: [
@@ -55,6 +70,9 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                 TextButton(
                   onPressed: () async {
                     await mediaList.search(query!);
+                    setState(() {
+                      _hasSearched = true;
+                    });
                     print(mediaList.searchResults[0].titleText);
                   },
                   style: TextButton.styleFrom(
@@ -64,7 +82,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                     ),
                     padding: EdgeInsets.all(13), // size of button
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.search,
                     color: Colors.black, // icon color
                     size: 22,
@@ -74,40 +92,81 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
               ],
             ),
             SizedBox(height: 20),
-            Consumer<MediaProvider>(
-              builder: (context, mediaList, child) {
-                if (mediaList.searchResults.isEmpty) {
-                  return Text('No Results :(');
-                }
-                return ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: mediaList.searchResults.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    final result = mediaList.searchResults[index];
-                    if (result.titleText != "title not found") {
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                          color: result.isSelected == true
-                        ? myColors.lightHighlightGoldColor
-                            : Colors.white,
-                        ),
-                        child: ListTile(
-                          title: Text(result.titleText!),
-                          subtitle: Text(result.date ?? ''),
-                          onTap: () {
-                            mediaList.selectResult(index);
-                          },
-                        ),
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  },
-                );
-              },
+            Expanded(
+              child: Consumer<MediaProvider>(
+                builder: (context, mediaList, child) {
+                  if (mediaList.searchResults.isEmpty) {
+                    return _hasSearched
+                        ? Text('No Results :(')
+                        : SizedBox();
+                  }
+                  return ListView.separated(
+                    itemCount: mediaList.searchResults.length + 1, // +1 for "add your own"
+                    separatorBuilder: (context, index) => SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: ListTile(
+                            title: Text(userSpecific ?? 'Custom Media'),
+                            subtitle: Text('(Add manually)'),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MediaDetailFormScreen(
+                                    posterPath: '',
+                                    title: userSpecific ?? '',
+                                    date: '',
+                                    category: widget.category,
+                                    id: DateTime.now().millisecondsSinceEpoch,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+
+                      // Otherwise, shift index by -1 to get actual results
+                      final result = mediaList.searchResults[index - 1];
+                      if (result.titleText != "title not found") {
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                            color: result.isSelected == true
+                                ? myColors.lightHighlightGoldColor
+                                : Colors.white,
+                          ),
+                          child: ListTile(
+                            leading: result.posterPath != ''
+                                ? Image.network(
+                              result.posterPath!,
+                              width: 50,
+                              height: 75,
+                              fit: BoxFit.cover,
+                            )
+                                : Container(width: 50, height: 75, color: Colors.grey[300]),
+                            title: Text(result.titleText!),
+                            subtitle: Text(result.date ?? ''),
+                            onTap: () {
+                              mediaList.selectResult(index - 1);
+                            },
+                          ),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
+                  );
+
+                },
+              ),
             ),
             SizedBox(height: 20),
             Container(
@@ -120,6 +179,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => MediaDetailFormScreen(
+                          posterPath: selected.posterPath!,
                           title: selected.titleText ?? userSpecific ?? '',
                           date: selected.date ?? '',
                           category: widget.category,

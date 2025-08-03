@@ -4,7 +4,7 @@ import 'package:mediary/models/media_model.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
-class MediaService {
+class WatchListService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 

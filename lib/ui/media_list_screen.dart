@@ -10,7 +10,7 @@ import 'package:mediary/ui/scaffold_wrapper.dart';
 import 'package:mediary/app_constants.dart' as constants;
 import 'package:mediary/ui/add_media_details_screen.dart';
 
-import '../services/media_services.dart';
+import '../services/watchlist_services.dart';
 
 class MediaListScreen extends StatefulWidget {
   final String category;
@@ -30,22 +30,13 @@ class _MediaListScreenState extends State<MediaListScreen> {
   @override
   void initState() {
     super.initState();
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid != null) {
-      Future.microtask(() async {
-        final mediaService = context.read<MediaService>();
-        final success = await mediaService.fetchMediaFromFirestore(uid, widget.category);
-        if (success) {
-          final mediaMap = mediaService.mediaMap;
-          final watchlistProvider = context.read<WatchlistProvider>();
-          watchlistProvider.clearAll();
-          mediaMap.forEach((_, media) => watchlistProvider.addMedia(media));
-        }
-      });
-    }
+    Future.microtask(() {
+      context.read<WatchlistProvider>().loadMedia(widget.category);
+    });
   }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: myColors.bgColor,
         body: AppScaffoldWrapper(
@@ -54,8 +45,9 @@ class _MediaListScreenState extends State<MediaListScreen> {
 
               Expanded(
                 child: Consumer<WatchlistProvider>(
-                  builder: (context, watchlistProvider, _) {
-                    final mediaList = watchlistProvider.mediaList;
+                  builder: (context, watchListProvider, _) {
+                    final mediaList = watchListProvider.mediaList;
+
                     if (mediaList.isEmpty) {
                       return Center(child: Text('No media in this category.'));
                     }

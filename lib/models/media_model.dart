@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 //model for both storing to firebase (watchlist) and also loading from API.
@@ -22,6 +23,7 @@ class MediaModel {
     required this.dateWatched,
     required this.index,
     required this.category,
+    required this.posterPath,
   });
 
   int? id;
@@ -33,29 +35,35 @@ class MediaModel {
   String? dateWatched;
   int? index;
   String? category;
+  String? posterPath;
 
   factory MediaModel.fromJson(Map<String, dynamic> json) {
     return MediaModel(
-      titleText: json['original_title'] ?? 'title not found',
-      date: json['release_date'] ?? 'date not found',
+      titleText: json['titleText'] ?? json['original_title'] ?? 'title not found',
+      date: json['release_date'] ?? json['date'] ?? 'date not found',
       id: json['id'] ?? 'no ID',
-      comments: "",
-      rating: 0,
+      comments: json['comments'] ?? "",
+      rating: json['rating'] ?? 0,
       isSelected: false,
       dateWatched: "",
       category: json['category'] ?? '',
       index: json['index'] ?? 0,
+      posterPath: json['posterPath'] ??  // from Firestore
+          (json['poster_path'] != null     // from TMDB API
+              ? 'https://image.tmdb.org/t/p/original${json['poster_path']}'
+              : null),
     );
   }
   Map<String, dynamic> toJson() => {
     "id": id,
     "release_date": date,
-    "title": titleText,
+    "titleText": titleText,
     "comments": comments,
     "rating": rating,
     "dateWatched": dateWatched,
     "index": index,
     "category": category,
+    "posterPath": posterPath,
   };
 
 }
