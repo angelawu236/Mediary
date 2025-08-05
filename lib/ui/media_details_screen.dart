@@ -1,29 +1,99 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediary/providers/media_provider.dart';
-import 'package:provider/provider.dart';
-import '../models/media_model.dart';
-import '../providers/watchlist_provider.dart';
-import 'package:mediary/ui/widgets/media_card.dart';
-import 'package:mediary/app_styles.dart' as myColors;
-import 'package:mediary/ui/scaffold_wrapper.dart';
+import 'package:mediary/models/media_model.dart';
 import 'package:mediary/app_constants.dart' as constants;
-import 'package:mediary/ui/add_media_details_screen.dart';
 
-import '../services/watchlist_services.dart';
+import 'package:mediary/app_styles.dart' as myColors;
+import 'package:mediary/ui/scaffold_wrapper.dart'; // Make sure this import is here
 
+class MediaDetailsScreen extends StatelessWidget {
+  final MediaModel media;
 
+  const MediaDetailsScreen({Key? key, required this.media}) : super(key: key);
 
-class MediaDetailsScreen extends StatefulWidget {
-  const MediaDetailsScreen({super.key});
-
-  @override
-  State<MediaDetailsScreen> createState() => _MediaDetailsScreenState();
-}
-
-class _MediaDetailsScreenState extends State<MediaDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: myColors.bgColor,
+      appBar: AppBar(
+        // automaticallyImplyLeading: false,
+        title: Text(media.titleText ?? "Media Details"),
+        backgroundColor: myColors.bgColor,
+        elevation: 0,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: (){
+        //     Navigator.pushNamed(context, constants.RoutePaths.MediaList);
+        //   },
+        // ),
+
+      ),
+      body: AppScaffoldWrapper(
+        child: SingleChildScrollView(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  if (media.posterPath != null && media.posterPath!.isNotEmpty)
+                    ClipRRect(
+                      child: Image.network(
+                        media.posterPath!,
+                        height: 300,
+                        width: 200,
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  else
+                    Container(
+                      height: 300,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  const SizedBox(height: 20),
+                  Text(
+                    media.titleText ?? 'No Title',
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Release Date: ${media.date ?? 'N/A'}",
+                    style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  if ((media.comments ?? '').isNotEmpty) ...[
+                    const Text(
+                      "Comments",
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      media.comments!,
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  Text(
+                    "Rating: ${media.rating}/5",
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+
+    );
   }
 }
+

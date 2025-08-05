@@ -36,7 +36,12 @@ class MediaDetailFormScreen extends StatelessWidget {
     String? watched_date;
 
     return Scaffold(
-      appBar: AppBar(title: Text('$category Details')),
+      backgroundColor: myColors.bgColor,
+      appBar: AppBar(
+          title: Text('$category Details'),
+          backgroundColor: myColors.bgColor,
+          elevation: 0,
+      ),
       body: Padding(
         padding: EdgeInsets.only(left: 15, right: 15),
         child: SingleChildScrollView(

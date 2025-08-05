@@ -38,6 +38,23 @@ class _MediaListScreenState extends State<MediaListScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+              '${widget.category} List',
+              style: TextStyle(
+                fontSize: 25,
+              )
+          ),
+          backgroundColor: myColors.bgColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamed(context, constants.RoutePaths.NavBar);
+            },
+          ),
+        ),
         backgroundColor: myColors.bgColor,
         body: AppScaffoldWrapper(
           child: Column(
@@ -47,7 +64,6 @@ class _MediaListScreenState extends State<MediaListScreen> {
                 child: Consumer<WatchlistProvider>(
                   builder: (context, watchListProvider, _) {
                     final mediaList = watchListProvider.mediaList;
-
                     if (mediaList.isEmpty) {
                       return Center(child: Text('No media in this category.'));
                     }
@@ -59,14 +75,28 @@ class _MediaListScreenState extends State<MediaListScreen> {
                     );
                   },
                 ),
-
               ),
-              TextButton(
-                  onPressed: (){
-                    Navigator.pushNamed(context, constants.RoutePaths.MediaItems, arguments: widget.category);
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: myColors.mediumGreenColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      constants.RoutePaths.MediaItems,
+                      arguments: widget.category,
+                    );
                   },
-                  child: const Text('add')
+                  child: const Text(
+                    'Add Media',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
               ),
+
             ]
           )
         )

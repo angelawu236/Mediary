@@ -10,6 +10,7 @@ import 'package:mediary/services/card_services.dart';
 import 'package:mediary/models/card_model.dart';
 import 'package:mediary/ui/widgets/card_view.dart';
 import 'package:mediary/app_router.dart' as RoutePaths;
+import 'package:mediary/ui/add_dialogue.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,14 +18,31 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
-//steps: have a button. on pressed, load from json and store into firestore. show "success" if so. then, fetch from firestore
-//and load onto screen.
-//todo: check if user's uid exists in the db yet. should be users/uid/cards and users/uid/media. if so, read from cards.json
-//if not, read from firestore.
 
 class _HomeState extends State<Home> {
 
   final _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      final cardsProvider = Provider.of<CardsProvider>(context, listen: false);
+      final uid = _auth.currentUser?.uid;
+
+      if (uid != null) {
+        if (await cardsProvider.doesUserExist(uid)) {
+          print('found user in firestore database, yay');
+          await cardsProvider.getCardsFirestore(uid);
+        } else {
+          print('user not found in firestore, have to load again');
+          await cardsProvider.getCardsJson();
+          cardsProvider.storeCardsFirestore();
+        }
+      }
+    });
+
+  }
 
 
   @override
@@ -35,47 +53,64 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: myColors.bgColor,
       body: AppScaffoldWrapper(
-        child: ListView(
-          children: <Widget>[
-            const Text(
-              constants.Titles.homeTitle, // 'My Media'
-              style: TextStyle(
-                color: myColors.darkTextColor,
-                fontSize: 45,
-              )
-            ),
-            TextButton(
-              onPressed: () async {
-                if(await cardsProvider.doesUserExist(_auth.currentUser!.uid)){
-                  print('found user in firestore database, yay');
-                  await cardsProvider.getCardsFirestore(_auth.currentUser!.uid);
-                } else {
-                  print('user not found in firestore, have to load again');
-                  await cardsProvider.getCardsJson();
-                  cardsProvider.storeCardsFirestore();
-                }
-              },
-              child: Text('get data'),
-            ),
-            ...cardsProvider.cards.entries.map((entry) {
-              final card = entry.value;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, constants.RoutePaths.MediaList, arguments: card.titleText );
-                  },
-                  child: CardContainer(
-                    titleText: card.titleText ?? 'Untitled',
-                    active: card.cardActive ?? false,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  const Text(
+                    constants.Titles.homeTitle,
+                    style: TextStyle(
+                      color: myColors.darkTextColor,
+                      fontSize: 45,
+                    ),
                   ),
+                  ...cardsProvider.cards.entries.map((entry) {
+                    final card = entry.value;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            constants.RoutePaths.MediaList,
+                            arguments: card.titleText,
+                          );
+                        },
+                        child: CardContainer(
+                          titleText: card.titleText ?? 'Untitled',
+                          active: card.cardActive ?? false,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: myColors.mediumGreenColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-              );
-            }),
-          ]
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AddCategoryDialog(),
+                  );
+                },
+                child: const Text(
+                  'Add Category',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ],
         ),
-      )
+      ),
     );
+
   }
 
 }

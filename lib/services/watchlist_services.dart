@@ -47,14 +47,14 @@ class WatchListService {
       await _db.collection('users').doc(uid).set({}, SetOptions(merge: true));
 
       for (final entry in mediaToStore.entries) {
-        final id = entry.key;
         final media = entry.value;
+        final id = media.id;
 
         await _db
             .collection('users')
             .doc(uid)
             .collection('media')
-            .doc(id)
+            .doc(id.toString())
             .set(media.toJson());
 
         print('Stored media $id: ${media.toJson()}');

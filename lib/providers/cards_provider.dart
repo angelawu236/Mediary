@@ -59,9 +59,28 @@ class CardsProvider extends ChangeNotifier {
   }
 
 
-  void addCard(String uid, CardsModel card){}
+  void addCard(String uid, CardsModel card) async {
+    cards[card.titleText!] = card;
 
-  void removeCard(String uid, CardsModel card){}
+    bool success = await cardService.storeCards(cards);
+    if (!success) {
+      print('Error adding card to Firestore');
+    }
+
+    notifyListeners();
+  }
+
+
+  void removeCard(String uid, CardsModel card) async {
+    cards.remove(card.titleText);
+
+    bool success = await cardService.storeCards(cards);
+    if (!success) {
+      print('Error removing card from Firestore');
+    }
+    notifyListeners();
+  }
+
 
 
   //if user does this in card settings

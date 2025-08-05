@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/media_model.dart';
@@ -8,7 +9,8 @@ class WatchlistProvider extends ChangeNotifier {
   final List<MediaModel> _mediaList = [];
   final WatchListService watchListService = WatchListService();
 
-  UnmodifiableListView<MediaModel> get mediaList => UnmodifiableListView(_mediaList);
+  UnmodifiableListView<MediaModel> get mediaList =>
+      UnmodifiableListView(_mediaList);
 
   int get count => _mediaList.length;
 
@@ -16,10 +18,12 @@ class WatchlistProvider extends ChangeNotifier {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
-    final success = await watchListService.fetchMediaFromFirestore(uid, category);
+    final success =
+        await watchListService.fetchMediaFromFirestore(uid, category);
 
     if (success) {
-      watchListService.mediaMap.forEach((k, v) => print('$k → ${v.titleText}, ${v.category}, ${v.index}'));
+      watchListService.mediaMap.forEach(
+          (k, v) => print('$k → ${v.titleText}, ${v.category}, ${v.index}'));
       clearAll();
       watchListService.mediaMap.forEach((_, media) => _mediaList.add(media));
       notifyListeners();
@@ -35,7 +39,6 @@ class WatchlistProvider extends ChangeNotifier {
     await watchListService.storeMedia(mediaToStore);
   }
 
-
   void addMedia(MediaModel media) {
     _mediaList.add(media);
     notifyListeners();
@@ -47,11 +50,26 @@ class WatchlistProvider extends ChangeNotifier {
     await storeAllMedia(category);
   }
 
+  void deleteMedia(MediaModel media) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('media')
+            .doc(media.id.toString())
+            .delete();
 
-  void deleteMedia(MediaModel media) {
-    _mediaList.remove(media);
-    notifyListeners();
+        // Then remove locally by ID
+        _mediaList.removeWhere((item) => item.id == media.id);
+        notifyListeners();
+      } catch (e) {
+        print('Failed to delete from Firestore: $e');
+      }
+    }
   }
+
 
   void reorder(int oldIndex, int newIndex) {
     if (newIndex > oldIndex) newIndex -= 1;

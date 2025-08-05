@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mediary/ui/add_category_screen.dart';
 import 'package:mediary/ui/onboarding/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:mediary/models/card_model.dart';
@@ -32,6 +33,10 @@ class Router {
       case RoutePaths.MediaList:
         final category = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => MediaListScreen(category: category));
+      // case RoutePaths.Bottom:
+      //   return MaterialPageRoute(builder: (_) => ());
+      case RoutePaths.AddCategory:
+        return MaterialPageRoute(builder: (_) => AddCategoryScreen());
         default:
         return MaterialPageRoute(builder: (_) => Home());
     }
