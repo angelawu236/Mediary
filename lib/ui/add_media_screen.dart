@@ -49,15 +49,11 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
       body: AppScaffoldWrapper(
         child: Column(
           children: [
-            TextButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Cancel'),
-            ),
             Row(
               children: [
                 Expanded(
                   child: TextField(
+                    style: const TextStyle(color: myColors.brightOutlineColor),
                     onChanged: (value){
                       query = value;
                       userSpecific = value;
@@ -66,7 +62,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                         .copyWith(hintText: 'Media Name'),
                   ),
                 ),
-                SizedBox(width: 3),
+                SizedBox(width: 15),
                 TextButton(
                   onPressed: () async {
                     await mediaList.search(query!);
@@ -76,7 +72,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                     print(mediaList.searchResults[0].titleText);
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: myColors.mediumGreenColor, // background color
+                    backgroundColor: myColors.mediaCardColor, // background color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5), // rectangle corners
                     ),
@@ -95,15 +91,17 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
             Expanded(
               child: Consumer<MediaProvider>(
                 builder: (context, mediaList, child) {
-                  if (mediaList.searchResults.isEmpty) {
-                    return _hasSearched
-                        ? Text('No Results :(')
-                        : SizedBox();
-                  }
+                  final results = mediaList.searchResults;
+
+                  final hasManual = _hasSearched ? 1 : 0;
+                  final noResultsRow = (_hasSearched && results.isEmpty) ? 1 : 0;
+                  final itemCount = results.length + hasManual + noResultsRow;
+
                   return ListView.builder(
-                    itemCount: mediaList.searchResults.length + 1,
+                    itemCount: itemCount,
                     itemBuilder: (context, index) {
-                      if (index == 0) {
+                      // Manual tile only after search
+                      if (index == 0 && _hasSearched) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Container(
@@ -111,34 +109,58 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                               border: Border.all(color: Colors.grey),
                               color: Colors.white,
                             ),
-                            child: ListTile(
-                              title: Text(userSpecific ?? 'Custom Media'),
-                              subtitle: const Text('(Add manually)'),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MediaDetailFormScreen(
-                                      posterPath: '',
-                                      title: userSpecific ?? '',
-                                      date: '',
-                                      category: widget.category,
-                                      id: DateTime.now().millisecondsSinceEpoch,
+                            child: Container(
+                              color: myColors.mediaCardColor,
+                              child: ListTile(
+                                title: Text(userSpecific ?? 'Custom Media'),
+                                subtitle: const Text('(Add manually)'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MediaDetailFormScreen(
+                                        posterPath: '',
+                                        title: userSpecific ?? '',
+                                        date: '',
+                                        category: widget.category,
+                                        id: DateTime.now().millisecondsSinceEpoch,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         );
                       }
 
-                      final result = mediaList.searchResults[index - 1];
+                      // When not searched yet and index==0, render nothing
+                      if (index == 0 && !_hasSearched) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final base = _hasSearched ? 1 : 0;
+
+                      // "No Results" row right after the manual tile
+                      if (_hasSearched && results.isEmpty && index == base) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: Center(
+                            child: Text(
+                              'No Search Results Found',
+                              style: TextStyle(color: myColors.brightOutlineColor),
+                            ),
+                          ),
+                        );
+                      }
+
+                      // Actual results
+                      final resultIndex = index - base; // safe now
+                      final result = results[resultIndex];
+
                       if (result.titleText != "title not found" &&
-                          result.posterPath != null &&
-                          result.posterPath!.isNotEmpty &&
-                          result.date != null &&
-                          result.date!.isNotEmpty) {
+                          (result.posterPath?.isNotEmpty ?? false) &&
+                          (result.date?.isNotEmpty ?? false)) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Container(
@@ -148,66 +170,69 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                                   ? myColors.lightHighlightGoldColor
                                   : Colors.white,
                             ),
-                            child: ListTile(
-                              leading: Image.network(
-                                result.posterPath!,
-                                width: 50,
-                                height: 75,
-                                fit: BoxFit.cover,
+                            child: Container(
+                              color: myColors.mediaCardColor,
+                              child: ListTile(
+                                leading: Image.network(
+                                  result.posterPath!,
+                                  width: 50,
+                                  height: 75,
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(result.titleText ?? ''),
+                                subtitle: Text(result.date ?? ''),
+                                onTap: () {
+                                  final selected = results[resultIndex];
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MediaDetailFormScreen(
+                                        posterPath: selected.posterPath ?? '',
+                                        title: selected.titleText ?? userSpecific ?? '',
+                                        date: selected.date ?? '',
+                                        category: widget.category,
+                                        id: selected.id ?? -1,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                              title: Text(result.titleText ?? ''),
-                              subtitle: Text(result.date ?? ''),
-                              onTap: () {
-                                mediaList.selectResult(index - 1);
-                              },
                             ),
                           ),
                         );
                       } else {
-                        return const SizedBox.shrink(); // This won’t add visible space now
+                        return const SizedBox.shrink();
                       }
                     },
                   );
 
-
                 },
               ),
             ),
+
             SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  final selected = context.read<MediaProvider>().selectedResult;
-                  if (selected != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MediaDetailFormScreen(
-                          posterPath: selected.posterPath ?? '',
-                          title: selected.titleText ?? userSpecific ?? '',
-                          date: selected.date ?? '',
-                          category: widget.category,
-                          id: selected.id ?? -1,
-                        ),
-                      ),
-                    );
-                  }
-              
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: myColors.mediumGreenColor,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-                child: Text(
-                  'Next',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-
           ],
+        ),
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 70, // tweak to your taste
+        width: double.infinity,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: myColors.brightOutlineColor,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.only(bottom: 15),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          ),
+            onPressed: () => Navigator.pop(context),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
         ),
       ),
     );

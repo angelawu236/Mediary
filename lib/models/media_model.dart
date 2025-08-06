@@ -39,8 +39,8 @@ class MediaModel {
 
   factory MediaModel.fromJson(Map<String, dynamic> json) {
     return MediaModel(
-      titleText: json['titleText'] ?? json['original_title'] ?? 'title not found',
-      date: json['release_date'] ?? json['date'] ?? 'date not found',
+      titleText: json['titleText'] ?? json ['name'] ?? json['original_title'] ?? 'title not found',
+      date: json['release_date'] ?? json['date'] ?? json['first_air_date']?? 'date not found',
       id: json['id'] ?? 'no ID',
       comments: json['comments'] ?? "",
       rating: json['rating'] ?? 0,

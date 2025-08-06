@@ -19,27 +19,40 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (active) {
       return Card(
-          color: Colors.white,
+          color: myColors.categoryCardColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9.0),
+            borderRadius: BorderRadius.circular(7.0),
           ),
           child: Container(
               height: 90,
-                alignment: Alignment.centerLeft,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.only(
-                      top: 10.0, right: 8.0, bottom: 10.0, left: 9.0),
-                  title: Text(titleText,
-                  style: TextStyle(fontSize: 20)),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: myColors.brightOutlineColor,
+                  width: 3.0,
                 ),
-                // buildCardContent(context),
-          )
-      );
+                borderRadius: BorderRadius.circular(7.0),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.only(
+                    top: 10.0, right: 8.0, bottom: 10.0, left: 9.0),
+                title: Text(
+                  titleText,
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.black,
+                    // fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+
+              // buildCardContent(context),
+              ));
     }
     return const Text('not active!'); //not active
   }
 
-  Widget buildCardContent(context){
+  Widget buildCardContent(context) {
     return const SizedBox(
       height: 100,
       width: double.infinity,

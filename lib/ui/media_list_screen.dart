@@ -44,12 +44,13 @@ class _MediaListScreenState extends State<MediaListScreen> {
               '${widget.category} List',
               style: TextStyle(
                 fontSize: 25,
+                color: myColors.lightTextColor,
               )
           ),
           backgroundColor: myColors.bgColor,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: myColors.lightTextColor),
             onPressed: () {
               Navigator.pushNamed(context, constants.RoutePaths.NavBar);
             },
@@ -59,7 +60,6 @@ class _MediaListScreenState extends State<MediaListScreen> {
         body: AppScaffoldWrapper(
           child: Column(
             children: <Widget>[
-
               Expanded(
                 child: Consumer<WatchlistProvider>(
                   builder: (context, watchListProvider, _) {
@@ -76,30 +76,36 @@ class _MediaListScreenState extends State<MediaListScreen> {
                   },
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: myColors.mediumGreenColor,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      constants.RoutePaths.MediaItems,
-                      arguments: widget.category,
-                    );
-                  },
-                  child: const Text(
-                    'Add Media',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-
             ]
           )
-        )
+        ),
+      bottomNavigationBar: SizedBox(
+        height: 70, // tweak to your taste
+        width: double.infinity,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: myColors.brightOutlineColor,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.only(bottom: 15),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              constants.RoutePaths.MediaItems,
+              arguments: widget.category,
+            );
+          },
+          child: const Text(
+              'Add Media',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

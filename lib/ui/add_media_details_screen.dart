@@ -38,7 +38,11 @@ class MediaDetailFormScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: myColors.bgColor,
       appBar: AppBar(
-          title: Text('$category Details'),
+          title: Text('$category Details',
+            style: TextStyle(color: myColors.brightOutlineColor,
+              fontSize: 25,
+            ),
+          ),
           backgroundColor: myColors.bgColor,
           elevation: 0,
       ),

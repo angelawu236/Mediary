@@ -26,8 +26,9 @@ class MediaCard extends StatelessWidget {
         );
       },
       child: Card(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
+        color: myColors.mediaCardColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(7.0), // slight rounding
         ),
         margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 5.0),
         elevation: 1,
@@ -52,14 +53,13 @@ class MediaCard extends StatelessWidget {
                       : Container(
                     width: 50,
                     height: 80,
-                    color: Colors.grey,
+                    color: myColors.darkImageColor,
                   ),
                 ),
               ),
               SizedBox(width: 5),
               Expanded(
                 child: Column(
-
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 2),

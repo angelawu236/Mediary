@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
                   const Text(
                     constants.Titles.homeTitle,
                     style: TextStyle(
-                      color: myColors.darkTextColor,
+                      color: myColors.lightTextColor,
                       fontSize: 45,
                     ),
                   ),
