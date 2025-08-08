@@ -21,26 +21,23 @@ class CardContainer extends StatelessWidget {
       return Card(
           color: myColors.categoryCardColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(7.0),
+            borderRadius: BorderRadius.circular(3.0),
           ),
           child: Container(
               height: 90,
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: myColors.brightOutlineColor,
-                  width: 3.0,
-                ),
-                borderRadius: BorderRadius.circular(7.0),
+                  color: Colors.black.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: ListTile(
                 contentPadding: const EdgeInsets.only(
-                    top: 10.0, right: 8.0, bottom: 10.0, left: 9.0),
+                    top: 10.0, right: 8.0, bottom: 10.0, left: 15.0),
                 title: Text(
                   titleText,
                   style: TextStyle(
                     fontSize: 25,
-                    color: Colors.black,
+                    color: myColors.brightOutlineColor,
                     // fontWeight: FontWeight.bold
                   ),
                 ),

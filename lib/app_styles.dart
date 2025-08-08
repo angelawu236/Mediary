@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-const Color bgColor = Color.fromRGBO(38, 68, 56, 1);
+const Color bgColor = Color.fromRGBO(50, 74, 54, 1);
 
-const Color categoryCardColor = Color.fromRGBO(89, 120, 87, 1);
+// const Color categoryCardColor = Color.fromRGBO(89, 120, 87, 1);
+const Color categoryCardColor = Color.fromRGBO(26, 54, 31, 1);
 const Color mediaCardColor = Color.fromRGBO(156, 195, 154, 1);
 const Color brightOutlineColor = Color.fromRGBO(209, 127, 67, 1);
 const Color lightTextColor = Color.fromRGBO(247, 205, 119, 1);
-const Color darkImageColor = Color.fromRGBO(27, 47, 62, 1);
+const Color darkImageColor = Color.fromRGBO(21, 39, 53, 1);
 
 const Color deleteColor = Color.fromRGBO(201, 103, 59, 1);
 const Color paleBlueColor = Color.fromRGBO(91, 129, 150, 1);

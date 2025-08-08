@@ -28,20 +28,39 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
     return AlertDialog(
-      title: const Text('New Category'),
+      backgroundColor: myColors.darkImageColor.withOpacity(0.5), // translucent dark
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      title: const Text(
+        'New Category',
+        style: TextStyle(color: Colors.white),
+      ),
       content: TextField(
         autofocus: true,
-        decoration: const InputDecoration(labelText: 'Category Title'),
-        onChanged: (value) {
-          category = value;
-        },
+        style: const TextStyle(color: Colors.white),
+        decoration: const InputDecoration(
+          labelText: 'Category Title',
+          labelStyle: TextStyle(color: Colors.white70),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white38),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+        ),
+        onChanged: (value) => category = value,
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: const Text('Cancel', style: TextStyle(color: Colors.white)),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: myColors.darkImageColor, // button text
+          ),
           onPressed: () {
             if (category != null && category!.trim().isNotEmpty && uid != null) {
               final newCard = CardsModel(
@@ -50,7 +69,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
               );
               if (!cardsProvider.cards.containsKey(newCard.titleText)) {
                 cardsProvider.addCard(uid, newCard);
-                Navigator.of(context).pop(); // close dialog
+                Navigator.of(context).pop();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Category already exists')),
@@ -62,5 +81,6 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
         ),
       ],
     );
+
   }
 }

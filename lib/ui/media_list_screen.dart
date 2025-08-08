@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mediary/providers/media_provider.dart';
+import 'package:mediary/ui/add_media_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/media_model.dart';
 import '../providers/watchlist_provider.dart';
@@ -9,6 +10,8 @@ import 'package:mediary/app_styles.dart' as myColors;
 import 'package:mediary/ui/scaffold_wrapper.dart';
 import 'package:mediary/app_constants.dart' as constants;
 import 'package:mediary/ui/add_media_details_screen.dart';
+import 'package:mediary/ui/animation.dart';
+import 'package:mediary/ui/all_media_screen.dart';
 
 import '../services/watchlist_services.dart';
 
@@ -50,11 +53,13 @@ class _MediaListScreenState extends State<MediaListScreen> {
           backgroundColor: myColors.bgColor,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: myColors.lightTextColor),
+            icon: const Icon(Icons.arrow_back_ios, color: myColors.lightTextColor,),
             onPressed: () {
-              Navigator.pushNamed(context, constants.RoutePaths.NavBar);
+              final route = cupertinoBackRoute(const Home());
+              Navigator.of(context).pushReplacement(route); // or pushAndRemoveUntil(route, (_) => false)
             },
           ),
+
         ),
         backgroundColor: myColors.bgColor,
         body: AppScaffoldWrapper(
@@ -86,16 +91,16 @@ class _MediaListScreenState extends State<MediaListScreen> {
           style: TextButton.styleFrom(
             backgroundColor: myColors.brightOutlineColor,
             foregroundColor: Colors.black,
-            padding: const EdgeInsets.only(bottom: 15),
+            padding: const EdgeInsets.only(bottom: 7),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
             ),
           ),
           onPressed: () {
-            Navigator.pushNamed(
-              context,
-              constants.RoutePaths.MediaItems,
-              arguments: widget.category,
+            Navigator.of(context).push(
+              cupertinoForwardRoute(
+                AddMediaScreen(category: widget.category), // your page ctor
+              ),
             );
           },
           child: const Text(

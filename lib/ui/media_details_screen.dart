@@ -15,16 +15,10 @@ class MediaDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: myColors.bgColor,
       appBar: AppBar(
-        // automaticallyImplyLeading: false,
         title: Text(media.titleText ?? "Media Details"),
         backgroundColor: myColors.bgColor,
         elevation: 0,
-        // leading: IconButton(
-        //   icon: const Icon(Icons.arrow_back),
-        //   onPressed: (){
-        //     Navigator.pushNamed(context, constants.RoutePaths.MediaList);
-        //   },
-        // ),
+        iconTheme: IconThemeData(color: myColors.lightTextColor),
 
       ),
       body: AppScaffoldWrapper(

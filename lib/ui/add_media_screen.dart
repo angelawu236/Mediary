@@ -53,12 +53,12 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    style: const TextStyle(color: myColors.brightOutlineColor),
+                    style: const TextStyle(color: myColors.lightTextColor),
                     onChanged: (value){
                       query = value;
                       userSpecific = value;
                     },
-                    decoration: constants.textFieldDecoration
+                    decoration: constants.textFieldDecoration2
                         .copyWith(hintText: 'Media Name'),
                   ),
                 ),
@@ -72,7 +72,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                     print(mediaList.searchResults[0].titleText);
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: myColors.mediaCardColor, // background color
+                    backgroundColor: Colors.black.withOpacity(0.4), // background color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5), // rectangle corners
                     ),
@@ -80,7 +80,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
                   ),
                   child: const Icon(
                     Icons.search,
-                    color: Colors.black, // icon color
+                    color: myColors.lightTextColor, // icon color
                     size: 22,
                   ),
                 ),
@@ -221,7 +221,7 @@ class _AddMediaScreenState extends State<AddMediaScreen> {
           style: TextButton.styleFrom(
             backgroundColor: myColors.brightOutlineColor,
             foregroundColor: Colors.black,
-            padding: const EdgeInsets.only(bottom: 15),
+            padding: const EdgeInsets.only(bottom: 7),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
             ),

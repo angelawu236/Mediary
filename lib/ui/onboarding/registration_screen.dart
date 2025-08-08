@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mediary/ui/onboarding/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:mediary/app_styles.dart' as myColors;
 import 'package:mediary/app_constants.dart' as constants;
+import '../all_media_screen.dart';
+import '../animation.dart';
 import '../scaffold_wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -41,9 +44,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
               TextField(
+                style: TextStyle(color: myColors.lightTextColor),
                 keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
-                decoration: constants.textFieldDecoration.copyWith(
+                decoration: constants.textFieldDecoration2.copyWith(
                     hintText: 'Enter your email'),
                 onChanged: (value){
                   email = value;
@@ -53,9 +57,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 8.0,
               ),
               TextField(
+                style: TextStyle(color: myColors.lightTextColor),
                 obscureText: true,
                 textAlign: TextAlign.center,
-                decoration: constants.textFieldDecoration.copyWith(
+                decoration: constants.textFieldDecoration2.copyWith(
                     hintText: 'Enter your password'),
                 onChanged: (value){
                   password = value;
@@ -68,13 +73,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 width: double.infinity,
                 child: TextButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(myColors.darkHighlightGoldColor),
-                    foregroundColor: WidgetStateProperty.all<Color>(myColors.darkTextColor),
+                    backgroundColor: WidgetStateProperty.all<Color>(myColors.brightOutlineColor),
+                    foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
                   ),
                   onPressed: ()async{
                     try{
                       final user = await _auth.createUserWithEmailAndPassword(email: email!, password: password!);
-                      Navigator.pushNamed(context, constants.RoutePaths.NavBar);
+                      final route = cupertinoForwardRoute(const Home());
+                      Navigator.of(context).pushReplacement(route);
                     } catch (e){
                       print(e);
                     }
@@ -84,18 +90,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               const Center(child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text('or'),
+                child: Text('or', style: TextStyle(color: myColors.lightTextColor)),
               )),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(myColors.darkHighlightGoldColor),
-                    foregroundColor: WidgetStateProperty.all<Color>(myColors.darkTextColor),
+                    backgroundColor: WidgetStateProperty.all<Color>(myColors.brightOutlineColor),
+                    foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
                   ),
                   onPressed: ()async{
                     try{
-                      Navigator.pushNamed(context, constants.RoutePaths.LoginScreen);
+                      final route = cupertinoBackRoute(const LoginScreen());
+                      Navigator.of(context).pushReplacement(route);
                     } catch (e){
                       print(e);
                     }

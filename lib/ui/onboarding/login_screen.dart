@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             TextField(
+              style: TextStyle(color: myColors.brightOutlineColor),
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
@@ -73,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 8.0,
             ),
             TextField(
+              style: TextStyle(color: myColors.brightOutlineColor),
               controller: passwordController,
               obscureText: true,
               textAlign: TextAlign.center,
@@ -90,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(
-                      myColors.darkHighlightGoldColor),
+                      myColors.brightOutlineColor),
                   foregroundColor:
                       WidgetStateProperty.all<Color>(myColors.darkTextColor),
                 ),
@@ -98,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   try {
                     final user = await _auth.signInWithEmailAndPassword(
                         email: email!, password: password!);
-                    Navigator.pushNamed(context, constants.RoutePaths.NavBar);
+                    Navigator.pushNamed(context, constants.RoutePaths.Home);
                   } catch (e) {
                     print(e);
                   }
@@ -108,14 +110,14 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const Center(child: Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text('or'),
+              child: Text('or', style: TextStyle(color: myColors.lightTextColor)),
             )),
             SizedBox(
               width: double.infinity,
               child: TextButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(
-                        myColors.darkHighlightGoldColor),
+                        myColors.brightOutlineColor),
                     foregroundColor:
                         WidgetStateProperty.all<Color>(myColors.darkTextColor),
                   ),

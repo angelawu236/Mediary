@@ -20,7 +20,7 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings){
     switch (settings.name){
       case RoutePaths.NavBar:
-        return MaterialPageRoute(builder: (_) => AppNavigationBar());
+        return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => Home());
       case RoutePaths.LoginScreen:
@@ -35,6 +35,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => MediaListScreen(category: category));
       // case RoutePaths.Bottom:
       //   return MaterialPageRoute(builder: (_) => ());
+      case RoutePaths.Profile:
+        return MaterialPageRoute(builder: (_) => ProfileScreen());
       case RoutePaths.AddCategory:
         return MaterialPageRoute(builder: (_) => AddCategoryScreen());
         default:
