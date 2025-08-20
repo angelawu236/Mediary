@@ -15,7 +15,7 @@ class MediaDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: myColors.bgColor,
       appBar: AppBar(
-        title: Text(media.titleText ?? "Media Details"),
+        title: Text(media.titleText ?? "Media Details", style: TextStyle(fontSize: 23, color: myColors.lightTextColor, fontWeight: FontWeight.bold),),
         backgroundColor: myColors.bgColor,
         elevation: 0,
         iconTheme: IconThemeData(color: myColors.lightTextColor),
@@ -48,36 +48,48 @@ class MediaDetailsScreen extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 20),
-                  Text(
-                    media.titleText ?? 'No Title',
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Release Date: ${media.date ?? 'N/A'}",
-                    style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                    textAlign: TextAlign.center,
+                  // const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Release Date:",
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16, fontStyle: FontStyle.italic),
+                          textAlign: TextAlign.center),
+                      SizedBox(width: 10),
+                      Text(
+                        "${media.date ?? 'N/A'}",
+                        style: const TextStyle(color: Colors.black, fontSize: 16, fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   if ((media.comments ?? '').isNotEmpty) ...[
                     const Text(
                       "Comments",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 6),
                     Text(
                       media.comments!,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
                       textAlign: TextAlign.left,
                     ),
                   ],
                   const SizedBox(height: 12),
-                  Text(
-                    "Rating: ${media.rating}/5",
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Rating: ",
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18),
+                        textAlign: TextAlign.center,),
+                      Text(
+                        "${media.rating}/5",
+                        style: const TextStyle(fontSize: 18, color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                 ],

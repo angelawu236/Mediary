@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mediary/providers/cards_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:mediary/app_styles.dart' as myColors;
-import 'package:mediary/app_constants.dart' as constants;
-import 'package:mediary/ui/scaffold_wrapper.dart';
 
 //ui container for a card, returns a single card
 class CardContainer extends StatelessWidget {
