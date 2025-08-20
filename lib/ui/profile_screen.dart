@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               constants.RoutePaths.LoginScreen,
-              (route) => false,
+                  (route) => false,
             );
           },
           child: const Text(

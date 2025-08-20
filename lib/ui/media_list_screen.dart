@@ -70,7 +70,7 @@ class _MediaListScreenState extends State<MediaListScreen> {
                   builder: (context, watchListProvider, _) {
                     final mediaList = watchListProvider.mediaList;
                     if (mediaList.isEmpty) {
-                      return Center(child: Text('No media in this category.'));
+                      return Center(child: Text('No media in this category.', style: TextStyle(color: myColors.lightTextColor)));
                     }
                     return ListView.builder(
                       itemCount: mediaList.length,

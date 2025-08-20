@@ -4,6 +4,7 @@ import 'package:mediary/ui/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:mediary/app_styles.dart' as myColors;
 import 'package:mediary/app_constants.dart' as constants;
+import '../providers/watchlist_provider.dart';
 import 'animation.dart';
 import 'scaffold_wrapper.dart';
 import 'package:mediary/providers/cards_provider.dart';
@@ -81,6 +82,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   ...cardsProvider.cards.entries.map((entry) {
+                    final docId = entry.key;
                     final card = entry.value;
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -92,13 +94,56 @@ class _HomeState extends State<Home> {
                             arguments: card.titleText,
                           );
                         },
+                        onLongPress: () async {
+                          final ok = await showDialog<bool>(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Delete category?'),
+                              content: Text('“${card.titleText ?? docId}” will be removed.'),
+                              actions: [
+                                TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+                              ],
+                            ),
+                          ) ?? false;
+
+                          if (ok) {
+                            final uid = _auth.currentUser?.uid;
+                            if (uid != null) {
+                              await cardsProvider.deleteCardByTitle(uid, docId);
+                            }
+                          }
+                        },
                         child: CardContainer(
-                          titleText: card.titleText ?? 'Untitled',
+                          titleText: card.titleText ?? "Untitled",
                           active: card.cardActive ?? false,
+                          docId: docId,
+                          onDelete: () async {
+                            final ok = await showDialog<bool>(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text('Delete category?'),
+                                content: Text('“${card.titleText}” will be removed.'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => Navigator.pop(context, false),
+                                      child: const Text('Cancel')),
+                                  TextButton(
+                                      onPressed: () => Navigator.pop(context, true),
+                                      child: const Text('Delete',
+                                          style: TextStyle(color: Colors.red))),
+                                ],
+                              ),
+                            ) ?? false;
+
+                            if (ok && uid != null) {
+                              await cardsProvider.deleteCardByTitle(uid!, docId);
+                            }
+                          },
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

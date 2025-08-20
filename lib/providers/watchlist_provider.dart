@@ -14,6 +14,10 @@ class WatchlistProvider extends ChangeNotifier {
 
   int get count => _mediaList.length;
 
+  int countByCategory(String category) {
+    return _mediaList.where((m) => m.category == category).length;
+  }
+
   Future<void> loadMedia(String category) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;

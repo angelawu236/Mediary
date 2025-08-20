@@ -59,12 +59,12 @@ class MediaDetailFormScreen extends StatelessWidget {
                 Center(
                   child: SizedBox(
                     width: 150,
-                    height: 225, // Adjust this as needed for your layout
+                    height: 225,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8), // optional
+                      borderRadius: BorderRadius.circular(8),
                       child: Image.network(
                         'https://image.tmdb.org/t/p/w342$posterPath',
-                        fit: BoxFit.cover, // or BoxFit.contain
+                        fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: myColors.darkImageColor,
