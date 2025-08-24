@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(bottom: 24.0),
               child: SizedBox(
                 width: 200,
-                height: 150,
+                height: 200,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.asset(
