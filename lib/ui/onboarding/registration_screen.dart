@@ -22,10 +22,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   String? _error;
 
+  String _aliasFromUsername(String input) {
+    final uname = input.trim().toLowerCase();
+    final ok = RegExp(r'^[a-z0-9._-]{3,20}$').hasMatch(uname);
+    if (!ok) throw FormatException('invalid-username');
+    return '$uname@mediary.user';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: myColors.bgColor,
+
+      appBar: AppBar(
+        backgroundColor: myColors.bgColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: myColors.lightTextColor),
+          onPressed: () {
+            final route = cupertinoBackRoute(const LoginScreen());
+            Navigator.of(context).pushReplacement(route);
+          },
+        ),
+      ),
+
       body: AppScaffoldWrapper(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,14 +70,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
               decoration: constants.textFieldDecoration2
-                  .copyWith(hintText: 'Enter your email'),
+                  .copyWith(hintText: 'Enter your username'),
               onChanged: (value) {
                 email = value;
               },
             ),
-            const SizedBox(
-              height: 8.0,
-            ),
+            const SizedBox(height: 8.0),
             TextField(
               style: TextStyle(color: myColors.lightTextColor),
               obscureText: true,
@@ -76,9 +94,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 style: const TextStyle(color: Colors.red, fontSize: 13),
               ),
             ],
-            const SizedBox(
-              height: 24.0,
-            ),
+            const SizedBox(height: 24.0),
 
             SizedBox(
               width: double.infinity,
@@ -86,68 +102,58 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(
                       myColors.brightOutlineColor),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
+                  foregroundColor:
+                  WidgetStateProperty.all<Color>(Colors.black),
                 ),
                 onPressed: () async {
+                  final e = (email ?? '').trim();
+                  final p = (password ?? '').trim();
+
+                  if (e.isEmpty || p.isEmpty) {
+                    setState(() => _error =
+                    'Please enter both username and password.');
+                    return;
+                  }
+
+                  String aliasEmail;
                   try {
-                    final route = cupertinoBackRoute(const LoginScreen());
-                    Navigator.of(context).pushReplacement(route);
-                  } catch (e) {
-                    print(e);
+                    aliasEmail = _aliasFromUsername(e);
+                  } catch (_) {
+                    setState(() => _error =
+                    'Username must be 3–20 chars (letters, numbers, ., _, or -).');
+                    return;
+                  }
+
+                  try {
+                    setState(() => _error = null);
+                    await _auth.createUserWithEmailAndPassword(
+                      email: aliasEmail,
+                      password: p,
+                    );
+                    final route = cupertinoForwardRoute(const Home());
+                    if (mounted) Navigator.of(context).pushReplacement(route);
+                  } on FirebaseAuthException catch (ex) {
+                    String msg = 'Registration failed.';
+                    if (ex.code == 'email-already-in-use') {
+                      msg = 'That username is already taken.';
+                    } else if (ex.code == 'weak-password') {
+                      msg = 'Please choose a stronger password.';
+                    }
+                    setState(() => _error = msg);
+                  } catch (_) {
+                    setState(() => _error =
+                    'Something went wrong. Please try again.');
                   }
                 },
-                child: const Text('Go Back'),
+                child: const Text('Register'),
               ),
-            )
+            ),
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 70, // tweak to your taste
-        width: double.infinity,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: myColors.brightOutlineColor,
-            foregroundColor: Colors.black,
-            padding: const EdgeInsets.only(bottom: 7),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-          ),
-          onPressed: () async {
-            final e = (email ?? '').trim();
-            final p = (password ?? '').trim();
 
-            if (e.isEmpty || p.isEmpty) {
-              setState(() => _error = 'Please enter both email and password.');
-              return;
-            }
-
-            try {
-              setState(() => _error = null);
-              final user = await _auth.createUserWithEmailAndPassword(
-                email: e,
-                password: p,
-              );
-              final route = cupertinoForwardRoute(const Home());
-              if (mounted) Navigator.of(context).pushReplacement(route);
-            } on FirebaseAuthException catch (ex) {
-              String msg = 'Registration failed. Your email may be already in use.';
-              if (ex.code == 'invalid-email') msg = 'That email looks invalid.';
-              else if (ex.code == 'email-already-in-use') msg = 'Email is already registered.';
-              setState(() => _error = msg);
-            } catch (_) {
-              setState(() => _error = 'Something went wrong. Please try again.');
-            }
-          },
-          child: const Text(
-            'Register',
-            style: TextStyle(
-              fontSize: 20,
-            ),
-          ),
-        ),
-      ),
+      // REMOVED: bottomNavigationBar "Register" button
     );
   }
 }
+

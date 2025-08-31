@@ -1,15 +1,16 @@
 {
-  "anime": {
+
+  "Shows": {
     "cardActive": true,
-    "titleText": "animes"
+    "titleText": "Shows"
   },
-  "shows": {
+  "Movies": {
     "cardActive": true,
-    "titleText": "shows"
+    "titleText": "Movies"
   },
-  "movies": {
+  "Documentaries": {
     "cardActive": true,
-    "titleText": "movies"
+    "titleText": "Documentaries"
   }
 }
 
