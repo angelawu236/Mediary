@@ -6,9 +6,7 @@ import 'package:mediary/services/watchlist_services.dart';
 import 'app_styles.dart' as myColors;
 import 'app_router.dart' as mediaryRouter;
 import 'app_constants.dart';
-import 'package:mediary/ui/bottom.dart';
-import 'package:mediary/ui/onboarding/login_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mediary/providers/cards_provider.dart';
 import 'package:mediary/services/image_services.dart';
@@ -19,6 +17,11 @@ var showOnboardingScreen = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await FirebaseAuth.instance.authStateChanges().first;
+
+  final user = FirebaseAuth.instance.currentUser;
+  showOnboardingScreen = (user == null);
   runApp(const MyApp());
 }
 
